@@ -256,7 +256,8 @@
     }
 
     .win-btn,
-    .window-link {
+    .window-link,
+    .start-item {
       min-height: 40px;
       border: none;
       background: var(--win-gray);
@@ -277,7 +278,8 @@
     }
 
     .win-btn:active,
-    .window-link:active {
+    .window-link:active,
+    .start-item:active {
       box-shadow:
         inset 1px 1px 0 var(--win-darker),
         inset -1px -1px 0 var(--win-light),
@@ -301,35 +303,31 @@
       white-space: pre-line;
     }
 
-    .about-smiley-wrap {
+    .about-banner-wrap {
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 120px;
       margin-bottom: 22px;
+      padding-top: 6px;
     }
 
-    .about-smiley {
-      width: 70px;
-      height: auto;
-      image-rendering: pixelated;
-      animation: blinkSmile 3s infinite;
-      filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.18));
+    .about-banner {
+      width: min(100%, 720px);
+      aspect-ratio: 16 / 5;
+      border: 1px solid #000;
+      background: #000;
+      box-shadow:
+        inset 1px 1px 0 #fff,
+        inset -1px -1px 0 #808080;
+      overflow: hidden;
     }
 
-    @keyframes blinkSmile {
-      0%, 88%, 100% {
-        transform: scaleY(1);
-        opacity: 1;
-      }
-      90% {
-        transform: scaleY(0.08);
-        opacity: 0.92;
-      }
-      93% {
-        transform: scaleY(1);
-        opacity: 1;
-      }
+    .about-banner video,
+    .about-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     .about-layout {
@@ -452,15 +450,13 @@
     }
 
     .start-logo {
-      width: 15px;
-      height: 15px;
-      background:
-        linear-gradient(90deg, #ff0000 50%, #00ff00 50%),
-        linear-gradient(90deg, #0000ff 50%, #ffff00 50%);
-      background-size: 100% 50%, 100% 50%;
-      background-position: 0 0, 0 100%;
-      background-repeat: no-repeat;
+      width: 16px;
+      height: 16px;
+      object-fit: cover;
+      image-rendering: pixelated;
       border: 1px solid #000;
+      background: #ffeb00;
+      flex-shrink: 0;
     }
 
     .taskbar-middle {
@@ -498,7 +494,7 @@
       position: fixed;
       left: 6px;
       bottom: calc(var(--taskbar-h) + 4px);
-      width: min(235px, calc(100vw - 12px));
+      width: min(250px, calc(100vw - 12px));
       display: none;
       background: var(--win-gray);
       box-shadow:
@@ -508,6 +504,7 @@
         inset 2px 2px 0 #dfdfdf,
         3px 3px 0 rgba(0,0,0,0.28);
       z-index: 9998;
+      padding: 6px;
     }
 
     .start-menu.open {
@@ -515,22 +512,20 @@
     }
 
     .start-menu-items {
-      padding: 4px;
+      display: grid;
+      gap: 6px;
     }
 
     .start-item {
       width: 100%;
-      border: none;
-      background: transparent;
+      justify-content: flex-start;
+      min-height: 34px;
       text-align: left;
-      padding: 10px 12px;
-      font: inherit;
-      cursor: pointer;
     }
 
     .start-item:hover {
-      background: var(--title-blue);
-      color: #fff;
+      background: #d7d7d7;
+      color: #000;
     }
 
     @media (max-width: 860px) {
@@ -673,7 +668,7 @@
       class="window main-window"
       id="window-main"
       data-window="main"
-      style="top: 46px; left: 46px;"
+      style="width:min(760px, calc(100vw - 16px));"
     >
       <div class="title-bar" data-drag-handle>
         <div class="title-bar-text">EVILLICA</div>
@@ -736,7 +731,7 @@
       class="window"
       id="window-about"
       data-window="about"
-      style="top: 62px; left: 86px; width: min(860px, calc(100vw - 16px));"
+      style="width:min(860px, calc(100vw - 16px));"
     >
       <div class="title-bar" data-drag-handle>
         <div class="title-bar-text">About</div>
@@ -748,8 +743,10 @@
       </div>
 
       <div class="window-body">
-        <div class="about-smiley-wrap">
-          <img src="smiley.png" alt="Pixel smiley" class="about-smiley" />
+        <div class="about-banner-wrap">
+          <div class="about-banner">
+            <video src="about-banner.mp4" autoplay muted loop playsinline></video>
+          </div>
         </div>
 
         <div class="about-layout">
@@ -780,7 +777,7 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       class="window"
       id="window-works"
       data-window="works"
-      style="top: 84px; left: 114px; width: min(700px, calc(100vw - 16px));"
+      style="width:min(700px, calc(100vw - 16px));"
     >
       <div class="title-bar" data-drag-handle>
         <div class="title-bar-text">Works</div>
@@ -815,7 +812,7 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       class="window"
       id="window-press"
       data-window="press"
-      style="top: 110px; left: 150px; width: min(720px, calc(100vw - 16px));"
+      style="width:min(720px, calc(100vw - 16px));"
     >
       <div class="title-bar" data-drag-handle>
         <div class="title-bar-text">Press</div>
@@ -861,7 +858,7 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       class="window"
       id="window-social"
       data-window="social"
-      style="top: 138px; left: 178px; width: min(650px, calc(100vw - 16px));"
+      style="width:min(650px, calc(100vw - 16px));"
     >
       <div class="title-bar" data-drag-handle>
         <div class="title-bar-text">Social Media</div>
@@ -889,7 +886,7 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       class="window"
       id="window-contact"
       data-window="contact"
-      style="top: 166px; left: 206px; width: min(580px, calc(100vw - 16px));"
+      style="width:min(580px, calc(100vw - 16px));"
     >
       <div class="title-bar" data-drag-handle>
         <div class="title-bar-text">Contact</div>
@@ -913,11 +910,11 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
 
   <div class="taskbar">
     <button class="start-button" id="startButton" aria-expanded="false">
-      <span class="start-logo" aria-hidden="true"></span>
+      <img src="smiley.png" alt="" class="start-logo" />
       <span>Start</span>
     </button>
 
-    <div class="taskbar-middle">EVILLICA 2026 All rights reserved.</div>
+    <div class="taskbar-middle">© 2026 All rights reserved.</div>
 
     <div class="clock" id="clock">12:00 AM</div>
   </div>
@@ -963,16 +960,32 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       win.style.zIndex = zCounter;
     }
 
+    function centerWindow(win) {
+      const taskbarHeight = 44;
+      const margin = 6;
+
+      const width = win.offsetWidth;
+      const height = win.offsetHeight;
+
+      let left = (window.innerWidth - width) / 2;
+      let top = (window.innerHeight - taskbarHeight - height) / 2;
+
+      const maxLeft = window.innerWidth - width - margin;
+      const maxTop = window.innerHeight - taskbarHeight - height - margin;
+
+      left = Math.max(margin, Math.min(left, maxLeft));
+      top = Math.max(margin, Math.min(top, maxTop));
+
+      win.style.left = `${left}px`;
+      win.style.top = `${top}px`;
+    }
+
     function openWindow(name) {
       const win = windowsMap[name];
       if (!win) return;
       win.classList.add("active");
       bringToFront(win);
-
-      if (name === "press" || name === "social" || name === "contact") {
-        centerWindow(win);
-      }
-
+      centerWindow(win);
       closeStartMenu();
     }
 
@@ -988,6 +1001,9 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
     function toggleMaximize(win) {
       win.classList.toggle("maximized");
       bringToFront(win);
+      if (!win.classList.contains("maximized")) {
+        centerWindow(win);
+      }
     }
 
     function openStartMenu() {
@@ -1019,55 +1035,17 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       clock.textContent = `${hours}:${minutes} ${suffix}`;
     }
 
-    function centerWindow(win) {
-      const taskbarHeight = 44;
-      const margin = 6;
-      const width = win.offsetWidth;
-      const height = win.offsetHeight;
-
-      let left = Math.max(margin, (window.innerWidth - width) / 2);
-      let top = Math.max(margin, (window.innerHeight - taskbarHeight - height) / 2);
-
-      const maxLeft = window.innerWidth - width - margin;
-      const maxTop = window.innerHeight - taskbarHeight - height - margin;
-
-      left = Math.min(left, maxLeft);
-      top = Math.min(top, maxTop);
-
-      win.style.left = `${left}px`;
-      win.style.top = `${top}px`;
-    }
-
     function fitWindowsToViewport() {
-      const taskbarHeight = 44;
       const margin = 6;
+      const maxWidth = window.innerWidth - margin * 2;
 
-      Object.entries(windowsMap).forEach(([name, win]) => {
-        const maxWidth = window.innerWidth - margin * 2;
+      Object.values(windowsMap).forEach((win) => {
         if (win.offsetWidth > maxWidth) {
           win.style.width = `${maxWidth}px`;
         }
 
-        if (isMobileLike()) {
-          win.style.left = `${margin}px`;
-          win.style.top = `${10}px`;
-        } else {
-          if (name === "press" || name === "social" || name === "contact") {
-            centerWindow(win);
-          } else {
-            const rect = win.getBoundingClientRect();
-            let left = rect.left;
-            let top = rect.top;
-
-            const maxLeft = window.innerWidth - win.offsetWidth - margin;
-            const maxTop = window.innerHeight - taskbarHeight - win.offsetHeight - margin;
-
-            left = Math.min(Math.max(left, margin), Math.max(margin, maxLeft));
-            top = Math.min(Math.max(top, margin), Math.max(margin, maxTop));
-
-            win.style.left = `${left}px`;
-            win.style.top = `${top}px`;
-          }
+        if (win.classList.contains("active") && !win.classList.contains("maximized")) {
+          centerWindow(win);
         }
       });
     }
