@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EVILLICA</title>
+  <meta
+    name="description"
+    content="EVILLICA — Digital Horror Creator / Director / Visual Artist"
+  />
+  <style>
+    :root {
+      --desktop: #008080;
+      --win-gray: #c0c0c0;
+      --win-dark: #808080;
+      --win-darker: #404040;
+      --win-light: #ffffff;
+      --title-blue: #000080;
+      --text: #000000;
+      --taskbar-h: 42px;
+      --window-shadow:
+        inset -1px -1px 0 var(--win-darker),
+        inset 1px 1px 0 var(--win-light),
+        inset -2px -2px 0 var(--win-dark),
+        inset 2px 2px 0 #dfdfdf;
+      --button-shadow:
+        inset -1px -1px 0 var(--win-darker),
+        inset 1px 1px 0 var(--win-light),
+        inset -2px -2px 0 var(--win-dark),
+        inset 2px 2px 0 #dfdfdf;
+      --button-pressed:
+        inset 1px 1px 0 var(--win-darker),
+        inset -1px -1px 0 var(--win-light),
+        inset 2px 2px 0 var(--win-dark),
+        inset -2px -2px 0 #dfdfdf;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--desktop);
+      color: var(--text);
+      font-family: "MS Sans Serif", Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 14px;
+    }
+
+    body {
+      position: relative;
+      user-select: none;
+    }
+
+    .desktop {
+      position: fixed;
+      inset: 0 0 var(--taskbar-h) 0;
+      background: var(--desktop);
+      overflow: hidden;
+    }
+
+    .desktop-pattern {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.05;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px);
+      background-size: 6px 6px;
+    }
+
+    .taskbar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: var(--taskbar-h);
+      background: var(--win-gray);
+      border-top: 2px solid #dfdfdf;
+      display: flex;
+      align-items: center;
+      padding: 4px 6px;
+      gap: 8px;
+      z-index: 9999;
+    }
+
+    .start-button {
+      height: 30px;
+      min-width: 82px;
+      background: var(--win-gray);
+      border: none;
+      box-shadow: var(--button-shadow);
+      font: inherit;
+      font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      cursor: pointer;
+    }
+
+    .start-button:active,
+    .start-button.active {
+      box-shadow: var(--button-pressed);
+    }
+
+    .start-logo {
+      width: 14px;
+      height: 14px;
+      background:
+        linear-gradient(90deg, #ff0000 50%, #00ff00 50%),
+        linear-gradient(90deg, #0000ff 50%, #ffff00 50%);
+      background-size: 100% 50%, 100% 50%;
+      background-position: 0 0, 0 100%;
+      background-repeat: no-repeat;
+      border: 1px solid #000;
+    }
+
+    .taskbar-spacer {
+      flex: 1;
+      height: 28px;
+      box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #fff;
+      background: transparent;
+    }
+
+    .clock {
+      min-width: 78px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #fff;
+      padding: 0 10px;
+      background: var(--win-gray);
+      font-size: 13px;
+    }
+
+    .start-menu {
+      position: fixed;
+      left: 6px;
+      bottom: calc(var(--taskbar-h) + 4px);
+      width: 240px;
+      background: var(--win-gray);
+      box-shadow: var(--window-shadow);
+      display: none;
+      z-index: 9998;
+    }
+
+    .start-menu.open {
+      display: flex;
+    }
+
+    .start-menu-side {
+      width: 34px;
+      background: linear-gradient(180deg, #808080 0%, #6d6d6d 100%);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 10px;
+    }
+
+    .start-menu-side span {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      color: #d8d8d8;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .start-menu-items {
+      flex: 1;
+      padding: 4px;
+    }
+
+    .start-item {
+      width: 100%;
+      background: transparent;
+      border: none;
+      text-align: left;
+      padding: 10px 12px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .start-item:hover {
+      background: var(--title-blue);
+      color: #fff;
+    }
+
+    .window {
+      position: absolute;
+      width: min(760px, calc(100vw - 24px));
+      min-width: 280px;
+      background: var(--win-gray);
+      box-shadow: var(--window-shadow);
+      display: none;
+      z-index: 10;
+    }
+
+    .window.active {
+      display: block;
+    }
+
+    .window.maximized {
+      inset: 8px 8px calc(var(--taskbar-h) + 8px) 8px !important;
+      width: auto !important;
+      height: auto !important;
+    }
+
+    .title-bar {
+      height: 28px;
+      background: var(--title-blue);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 3px 4px 3px 8px;
+      font-weight: bold;
+      cursor: move;
+      gap: 8px;
+    }
+
+    .title-bar-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .title-bar-controls {
+      display: flex;
+      gap: 3px;
+      flex-shrink: 0;
+    }
+
+    .title-btn {
+      width: 22px;
+      height: 20px;
+      background: var(--win-gray);
+      border: none;
+      box-shadow: var(--button-shadow);
+      font: inherit;
+      font-weight: bold;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0;
+      color: #000;
+    }
+
+    .title-btn:active {
+      box-shadow: var(--button-pressed);
+    }
+
+    .window-body {
+      padding: 18px;
+      background: var(--win-gray);
+      overflow: auto;
+      max-height: min(78vh, calc(100vh - 120px));
+    }
+
+    .window.maximized .window-body {
+      max-height: calc(100vh - var(--taskbar-h) - 52px);
+    }
+
+    .main-window {
+      width: min(880px, calc(100vw - 24px));
+    }
+
+    .main-layout {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .image-one {
+      width: 100px;
+      height: 100px;
+      background: #a8a8a8;
+      box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #808080;
+      border: 1px solid #000;
+      object-fit: cover;
+      display: block;
+    }
+
+    .image-placeholder {
+      width: 100px;
+      height: 100px;
+      box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #808080;
+      border: 1px solid #000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8px;
+      font-size: 11px;
+      line-height: 1.3;
+      background: #d4d4d4;
+    }
+
+    .main-text h1 {
+      margin: 0 0 8px;
+      font-size: 34px;
+      line-height: 1;
+      letter-spacing: 0.5px;
+    }
+
+    .subtitle {
+      font-weight: bold;
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+
+    .description {
+      line-height: 1.45;
+      max-width: 580px;
+      margin-bottom: 18px;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      max-width: 560px;
+    }
+
+    .button-grid.bottom {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 10px;
+      max-width: 380px;
+    }
+
+    .win-btn {
+      min-height: 36px;
+      background: var(--win-gray);
+      border: none;
+      box-shadow: var(--button-shadow);
+      font: inherit;
+      padding: 8px 12px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .win-btn:active {
+      box-shadow: var(--button-pressed);
+    }
+
+    .section-text {
+      line-height: 1.6;
+      margin: 0;
+      white-space: pre-line;
+    }
+
+    .about-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .media-panel {
+      min-height: 260px;
+      background: #b8b8b8;
+      box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #fff;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .media-preview {
+      flex: 1;
+      min-height: 180px;
+      border: 1px solid #000;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      text-align: center;
+      padding: 12px;
+      overflow: hidden;
+    }
+
+    .media-preview img,
+    .media-preview video,
+    .media-preview iframe {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border: 0;
+      display: block;
+    }
+
+    .media-caption {
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .group-box {
+      margin-top: 12px;
+      padding: 14px;
+      box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #808080;
+      background: #d2d2d2;
+    }
+
+    .group-box h3 {
+      margin: 0 0 10px;
+      font-size: 15px;
+    }
+
+    .simple-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .list-item {
+      padding: 12px;
+      background: #d2d2d2;
+      box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #808080;
+    }
+
+    .list-item strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .link-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .window-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 120px;
+      text-decoration: none;
+      color: #000;
+      background: var(--win-gray);
+      box-shadow: var(--button-shadow);
+      padding: 10px 14px;
+    }
+
+    .window-link:active {
+      box-shadow: var(--button-pressed);
+    }
+
+    .contact-box {
+      max-width: 520px;
+    }
+
+    .status-line {
+      margin-top: 14px;
+      padding: 8px 10px;
+      box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #fff;
+      background: #d9d9d9;
+      font-size: 12px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 720px) {
+      .window {
+        width: calc(100vw - 14px);
+      }
+
+      .main-layout,
+      .about-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .main-text h1 {
+        font-size: 28px;
+      }
+
+      .button-grid {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+      }
+
+      .button-grid.bottom {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+      }
+
+      .window-body {
+        padding: 14px;
+      }
+
+      .image-one,
+      .image-placeholder {
+        width: 88px;
+        height: 88px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="desktop" id="desktop">
+    <div class="desktop-pattern"></div>
+
+    <!-- MAIN WINDOW -->
+    <section
+      class="window main-window"
+      id="window-main"
+      data-window="main"
+      style="top: 56px; left: 56px;"
+      aria-label="EVILLICA main window"
+    >
+      <div class="title-bar" data-drag-handle>
+        <div class="title-bar-text">EVILLICA</div>
+        <div class="title-bar-controls">
+          <button class="title-btn" data-minimize aria-label="Minimize">_</button>
+          <button class="title-btn" data-maximize aria-label="Maximize">□</button>
+          <button class="title-btn" data-close aria-label="Close">×</button>
+        </div>
+      </div>
+      <div class="window-body">
+        <div class="main-layout">
+          <div>
+            <img
+              src="image-one.png"
+              alt="EVILLICA portrait"
+              class="image-one"
+              id="imageOne"
+            />
+            <div class="image-placeholder" id="imagePlaceholder">
+              image-one.png<br />place your square image here
+            </div>
+          </div>
+
+          <div class="main-text">
+            <h1>EVILLICA</h1>
+            <div class="subtitle">Digital Horror Creator / Director / Visual Artist</div>
+            <div class="description">
+              Digital horror creator working across short-form video, music collaborations,
+              animated loops, and still visual works shaped by retro-digital aesthetics,
+              liminal imagery, and nostalgic unease.
+            </div>
+
+            <div class="button-grid">
+              <button class="win-btn" data-open="about">About</button>
+              <button class="win-btn" data-open="works">Works</button>
+              <button class="win-btn" data-open="press">Press</button>
+            </div>
+
+            <div class="button-grid bottom">
+              <button class="win-btn" data-open="social">Social Media</button>
+              <button class="win-btn" data-open="contact">Contact</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="status-line">
+          Ready.
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section
+      class="window"
+      id="window-about"
+      data-window="about"
+      style="top: 92px; left: 120px;"
+      aria-label="About window"
+    >
+      <div class="title-bar" data-drag-handle>
+        <div class="title-bar-text">About</div>
+        <div class="title-bar-controls">
+          <button class="title-btn" data-minimize aria-label="Minimize">_</button>
+          <button class="title-btn" data-maximize aria-label="Maximize">□</button>
+          <button class="title-btn" data-close aria-label="Close">×</button>
+        </div>
+      </div>
+      <div class="window-body">
+        <div class="about-layout">
+          <div>
+            <p class="section-text">EVILLICA is an independent digital horror creator and visual artist exploring modern internet aesthetics through short-form cinematic storytelling.
+
+Her work blends elements of analog horror, liminal environments, puppetry, and retro-digital visual language to create surreal micro-narratives that feel both nostalgic and disorienting.
+
+Each project is developed as a complete personal production — from concept and script to filming, performance, editing, and final visual design.
+
+Working across video, animated loops, and still digital imagery, EVILLICA builds compact fictional worlds that merge contemporary internet culture with the emotional textures of forgotten media.</p>
+          </div>
+
+          <div class="media-panel">
+            <div class="media-preview" id="aboutMedia">
+              Add your GIF, image, or video here later
+            </div>
+            <div class="media-caption">
+              Media panel placeholder. You can later replace this with a GIF,
+              still image, short video, or embedded clip.
+            </div>
+          </div>
+        </div>
+
+        <div class="status-line">
+          About information loaded.
+        </div>
+      </div>
+    </section>
+
+    <!-- WORKS -->
+    <section
+      class="window"
+      id="window-works"
+      data-window="works"
+      style="top: 110px; left: 150px;"
+      aria-label="Works window"
+    >
+      <div class="title-bar" data-drag-handle>
+        <div class="title-bar-text">Works</div>
+        <div class="title-bar-controls">
+          <button class="title-btn" data-minimize aria-label="Minimize">_</button>
+          <button class="title-btn" data-maximize aria-label="Maximize">□</button>
+          <button class="title-btn" data-close aria-label="Close">×</button>
+        </div>
+      </div>
+      <div class="window-body">
+        <div class="simple-list">
+          <div class="list-item">
+            <strong>Commercials</strong>
+            Selected commercial and branded visual work can be listed here.
+          </div>
+          <div class="list-item">
+            <strong>Art Projects</strong>
+            Personal short-form horror, digital art pieces, loops, and experimental concepts.
+          </div>
+          <div class="list-item">
+            <strong>Collaborations</strong>
+            Music-driven and artist-led collaborative works can be placed here.
+          </div>
+        </div>
+
+        <div class="status-line">
+          Work categories available.
+        </div>
+      </div>
+    </section>
+
+    <!-- PRESS -->
+    <section
+      class="window"
+      id="window-press"
+      data-window="press"
+      style="top: 126px; left: 180px;"
+      aria-label="Press window"
+    >
+      <div class="title-bar" data-drag-handle>
+        <div class="title-bar-text">Press</div>
+        <div class="title-bar-controls">
+          <button class="title-btn" data-minimize aria-label="Minimize">_</button>
+          <button class="title-btn" data-maximize aria-label="Maximize">□</button>
+          <button class="title-btn" data-close aria-label="Close">×</button>
+        </div>
+      </div>
+      <div class="window-body">
+        <div class="simple-list">
+          <div class="list-item">
+            <strong>Interview — Title</strong>
+            Add a short description here.
+            <div class="link-row">
+              <a class="window-link" href="#" target="_blank" rel="noopener">Open</a>
+            </div>
+          </div>
+
+          <div class="list-item">
+            <strong>Article — Title</strong>
+            Add a short description here.
+            <div class="link-row">
+              <a class="window-link" href="#" target="_blank" rel="noopener">Open</a>
+            </div>
+          </div>
+
+          <div class="list-item">
+            <strong>Article — Title</strong>
+            Add a short description here.
+            <div class="link-row">
+              <a class="window-link" href="#" target="_blank" rel="noopener">Open</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="status-line">
+          Press materials indexed.
+        </div>
+      </div>
+    </section>
+
+    <!-- SOCIAL -->
+    <section
+      class="window"
+      id="window-social"
+      data-window="social"
+      style="top: 144px; left: 210px;"
+      aria-label="Social Media window"
+    >
+      <div class="title-bar" data-drag-handle>
+        <div class="title-bar-text">Social Media</div>
+        <div class="title-bar-controls">
+          <button class="title-btn" data-minimize aria-label="Minimize">_</button>
+          <button class="title-btn" data-maximize aria-label="Maximize">□</button>
+          <button class="title-btn" data-close aria-label="Close">×</button>
+        </div>
+      </div>
+      <div class="window-body">
+        <p class="section-text">Explore EVILLICA across platforms.</p>
+
+        <div class="link-row" style="margin-top: 16px;">
+          <a class="window-link" href="https://instagram.com/" target="_blank" rel="noopener">Instagram</a>
+          <a class="window-link" href="https://tiktok.com/" target="_blank" rel="noopener">TikTok</a>
+          <a class="window-link" href="https://youtube.com/" target="_blank" rel="noopener">YouTube</a>
+        </div>
+
+        <div class="status-line">
+          External links ready.
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section
+      class="window"
+      id="window-contact"
+      data-window="contact"
+      style="top: 160px; left: 240px;"
+      aria-label="Contact window"
+    >
+      <div class="title-bar" data-drag-handle>
+        <div class="title-bar-text">Contact</div>
+        <div class="title-bar-controls">
+          <button class="title-btn" data-minimize aria-label="Minimize">_</button>
+          <button class="title-btn" data-maximize aria-label="Maximize">□</button>
+          <button class="title-btn" data-close aria-label="Close">×</button>
+        </div>
+      </div>
+      <div class="window-body">
+        <div class="contact-box">
+          <p class="section-text">For collaborations, press inquiries, and creative partnerships.</p>
+          <div class="link-row" style="margin-top: 16px;">
+            <a class="window-link" href="mailto:your@email.com">Email</a>
+          </div>
+        </div>
+
+        <div class="status-line">
+          Contact route available.
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="taskbar">
+    <button class="start-button" id="startButton" aria-expanded="false" aria-controls="startMenu">
+      <span class="start-logo" aria-hidden="true"></span>
+      <span>Start</span>
+    </button>
+    <div class="taskbar-spacer"></div>
+    <div class="clock" id="clock">12:00 AM</div>
+  </div>
+
+  <nav class="start-menu" id="startMenu" aria-label="Start menu">
+    <div class="start-menu-side"><span>Windows 95</span></div>
+    <div class="start-menu-items">
+      <button class="start-item" data-open="main">Open EVILLICA</button>
+      <button class="start-item" data-open="about">About</button>
+      <button class="start-item" data-open="works">Works</button>
+      <button class="start-item" data-open="press">Press</button>
+      <button class="start-item" data-open="social">Social Media</button>
+      <button class="start-item" data-open="contact">Contact</button>
+    </div>
+  </nav>
+
+  <!-- Add popup.wav in your repo later if you want sound -->
+  <audio id="popupSound" preload="auto">
+    <source src="popup.wav" type="audio/wav" />
+  </audio>
+
+  <script>
+    const windowsMap = {
+      main: document.getElementById("window-main"),
+      about: document.getElementById("window-about"),
+      works: document.getElementById("window-works"),
+      press: document.getElementById("window-press"),
+      social: document.getElementById("window-social"),
+      contact: document.getElementById("window-contact"),
+    };
+
+    const startButton = document.getElementById("startButton");
+    const startMenu = document.getElementById("startMenu");
+    const clock = document.getElementById("clock");
+    const popupSound = document.getElementById("popupSound");
+
+    let zCounter = 20;
+
+    function bringToFront(win) {
+      zCounter += 1;
+      win.style.zIndex = zCounter;
+    }
+
+    function openWindow(name) {
+      const win = windowsMap[name];
+      if (!win) return;
+      win.classList.add("active");
+      bringToFront(win);
+      closeStartMenu();
+    }
+
+    function closeWindow(win) {
+      win.classList.remove("active");
+      win.classList.remove("maximized");
+    }
+
+    function toggleMaximize(win) {
+      win.classList.toggle("maximized");
+      bringToFront(win);
+    }
+
+    function minimizeWindow(win) {
+      win.classList.remove("active");
+    }
+
+    function openStartMenu() {
+      startMenu.classList.add("open");
+      startButton.classList.add("active");
+      startButton.setAttribute("aria-expanded", "true");
+    }
+
+    function closeStartMenu() {
+      startMenu.classList.remove("open");
+      startButton.classList.remove("active");
+      startButton.setAttribute("aria-expanded", "false");
+    }
+
+    function toggleStartMenu() {
+      if (startMenu.classList.contains("open")) {
+        closeStartMenu();
+      } else {
+        openStartMenu();
+      }
+    }
+
+    function updateClock() {
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, "0");
+      const suffix = hours >= 12 ? "PM" : "AM";
+      hours = hours % 12 || 12;
+      clock.textContent = `${hours}:${minutes} ${suffix}`;
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    startButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleStartMenu();
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!startMenu.contains(e.target) && !startButton.contains(e.target)) {
+        closeStartMenu();
+      }
+    });
+
+    document.querySelectorAll("[data-open]").forEach((button) => {
+      button.addEventListener("click", () => {
+        openWindow(button.dataset.open);
+      });
+    });
+
+    document.querySelectorAll(".window").forEach((win) => {
+      win.addEventListener("mousedown", () => bringToFront(win));
+      win.addEventListener("touchstart", () => bringToFront(win), { passive: true });
+
+      const closeBtn = win.querySelector("[data-close]");
+      const minBtn = win.querySelector("[data-minimize]");
+      const maxBtn = win.querySelector("[data-maximize]");
+
+      closeBtn.addEventListener("click", () => closeWindow(win));
+      minBtn.addEventListener("click", () => minimizeWindow(win));
+      maxBtn.addEventListener("click", () => toggleMaximize(win));
+    });
+
+    // Simple dragging
+    document.querySelectorAll(".window").forEach((win) => {
+      const handle = win.querySelector("[data-drag-handle]");
+      let isDragging = false;
+      let offsetX = 0;
+      let offsetY = 0;
+
+      const onMouseMove = (e) => {
+        if (!isDragging || win.classList.contains("maximized")) return;
+
+        const maxLeft = window.innerWidth - win.offsetWidth;
+        const maxTop = window.innerHeight - win.offsetHeight - 42;
+
+        let left = e.clientX - offsetX;
+        let top = e.clientY - offsetY;
+
+        left = Math.max(0, Math.min(left, maxLeft));
+        top = Math.max(0, Math.min(top, maxTop));
+
+        win.style.left = `${left}px`;
+        win.style.top = `${top}px`;
+      };
+
+      const stopDragging = () => {
+        isDragging = false;
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", stopDragging);
+      };
+
+      handle.addEventListener("mousedown", (e) => {
+        if (e.target.closest(".title-bar-controls")) return;
+        if (win.classList.contains("maximized")) return;
+
+        bringToFront(win);
+        isDragging = true;
+        const rect = win.getBoundingClientRect();
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", stopDragging);
+      });
+    });
+
+    // Show placeholder if image-one.png is missing
+    const imageOne = document.getElementById("imageOne");
+    const imagePlaceholder = document.getElementById("imagePlaceholder");
+
+    imageOne.addEventListener("error", () => {
+      imageOne.style.display = "none";
+      imagePlaceholder.style.display = "flex";
+    });
+
+    // Auto-open main window
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        openWindow("main");
+        popupSound.play().catch(() =>
