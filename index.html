@@ -21,7 +21,6 @@
       --win-darker: #404040;
       --title-blue: #000080;
       --taskbar-h: 44px;
-      --pad: 8px;
       --font-main: "MS Sans Serif", Tahoma, Geneva, Verdana, sans-serif;
     }
 
@@ -49,7 +48,7 @@
       position: fixed;
       inset: 0 0 var(--taskbar-h) 0;
       background: var(--desktop);
-      overflow: hidden;
+      overflow: auto;
     }
 
     .desktop::before {
@@ -72,7 +71,9 @@
         inset -1px -1px 0 var(--win-darker),
         inset 1px 1px 0 var(--win-light),
         inset -2px -2px 0 var(--win-dark),
-        inset 2px 2px 0 #dfdfdf;
+        inset 2px 2px 0 #dfdfdf,
+        3px 3px 0 rgba(0,0,0,0.35),
+        6px 6px 0 rgba(0,0,0,0.18);
       min-width: 280px;
       max-width: calc(100vw - 16px);
       z-index: 10;
@@ -155,17 +156,35 @@
       width: min(760px, calc(100vw - 16px));
     }
 
-    .hero-layout {
+    .hero-grid {
       display: grid;
-      grid-template-columns: 118px 1fr;
-      gap: 18px;
+      grid-template-columns: 110px 1fr;
+      grid-template-areas:
+        "image top"
+        "desc desc"
+        "buttons buttons";
+      gap: 14px 18px;
       align-items: start;
     }
 
     .hero-image-wrap {
+      grid-area: image;
       display: flex;
       align-items: flex-start;
       justify-content: flex-start;
+    }
+
+    .hero-top {
+      grid-area: top;
+      min-width: 0;
+    }
+
+    .hero-description-wrap {
+      grid-area: desc;
+    }
+
+    .hero-buttons-wrap {
+      grid-area: buttons;
     }
 
     .hero-image,
@@ -194,12 +213,8 @@
       padding: 8px;
     }
 
-    .hero-copy {
-      min-width: 0;
-    }
-
     .hero-title {
-      margin: 0 0 10px;
+      margin: 0 0 8px;
       font-size: 42px;
       line-height: 0.95;
       font-weight: bold;
@@ -207,21 +222,22 @@
     }
 
     .hero-subtitle {
-      margin: 0 0 14px;
+      margin: 0;
       font-size: 18px;
       font-weight: bold;
       line-height: 1.2;
     }
 
     .hero-description {
-      margin: 0 0 18px;
+      margin: 0;
       font-size: 14px;
       line-height: 1.5;
-      max-width: 500px;
+      max-width: 100%;
     }
 
     .button-rows {
       max-width: 500px;
+      margin: 0 auto;
     }
 
     .button-row {
@@ -235,7 +251,7 @@
     }
 
     .button-row.one {
-      grid-template-columns: minmax(160px, 220px);
+      grid-template-columns: minmax(170px, 220px);
       justify-content: center;
     }
 
@@ -283,6 +299,37 @@
       margin: 0;
       line-height: 1.6;
       white-space: pre-line;
+    }
+
+    .about-smiley-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 120px;
+      margin-bottom: 22px;
+    }
+
+    .about-smiley {
+      width: 70px;
+      height: auto;
+      image-rendering: pixelated;
+      animation: blinkSmile 3s infinite;
+      filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.18));
+    }
+
+    @keyframes blinkSmile {
+      0%, 88%, 100% {
+        transform: scaleY(1);
+        opacity: 1;
+      }
+      90% {
+        transform: scaleY(0.08);
+        opacity: 0.92;
+      }
+      93% {
+        transform: scaleY(1);
+        opacity: 1;
+      }
     }
 
     .about-layout {
@@ -416,12 +463,21 @@
       border: 1px solid #000;
     }
 
-    .taskbar-spacer {
+    .taskbar-middle {
       flex: 1;
+      min-width: 0;
       height: 30px;
       box-shadow:
         inset 1px 1px 0 #808080,
         inset -1px -1px 0 #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 12px;
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .clock {
@@ -442,41 +498,23 @@
       position: fixed;
       left: 6px;
       bottom: calc(var(--taskbar-h) + 4px);
-      width: min(250px, calc(100vw - 12px));
+      width: min(235px, calc(100vw - 12px));
       display: none;
       background: var(--win-gray);
       box-shadow:
         inset -1px -1px 0 var(--win-darker),
         inset 1px 1px 0 var(--win-light),
         inset -2px -2px 0 var(--win-dark),
-        inset 2px 2px 0 #dfdfdf;
+        inset 2px 2px 0 #dfdfdf,
+        3px 3px 0 rgba(0,0,0,0.28);
       z-index: 9998;
     }
 
     .start-menu.open {
-      display: flex;
-    }
-
-    .start-menu-side {
-      width: 34px;
-      background: linear-gradient(180deg, #808080 0%, #6d6d6d 100%);
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      padding-bottom: 10px;
-    }
-
-    .start-menu-side span {
-      writing-mode: vertical-rl;
-      transform: rotate(180deg);
-      color: #d8d8d8;
-      font-weight: bold;
-      letter-spacing: 1px;
-      font-size: 13px;
+      display: block;
     }
 
     .start-menu-items {
-      flex: 1;
       padding: 4px;
     }
 
@@ -508,74 +546,111 @@
     @media (max-width: 700px) {
       .window {
         left: 6px !important;
-        top: 6px !important;
+        top: 10px !important;
         width: calc(100vw - 12px) !important;
       }
 
       .window-body {
-        max-height: calc(100vh - var(--taskbar-h) - 56px);
-        padding: 14px;
+        max-height: calc(100vh - var(--taskbar-h) - 64px);
+        padding: 12px;
       }
 
-      .hero-layout,
       .about-layout {
         grid-template-columns: 1fr;
       }
 
-      .hero-image-wrap {
-        justify-content: flex-start;
+      .hero-grid {
+        grid-template-columns: 96px 1fr;
+        grid-template-areas:
+          "image top"
+          "desc desc"
+          "buttons buttons";
+        gap: 12px 14px;
+      }
+
+      .hero-image,
+      .hero-image-placeholder {
+        width: 92px;
+        height: 92px;
       }
 
       .hero-title {
-        font-size: 34px;
-        margin-top: 2px;
+        font-size: 28px;
+        margin: 0 0 6px;
       }
 
       .hero-subtitle {
-        font-size: 16px;
+        font-size: 14px;
       }
 
       .hero-description {
-        max-width: 100%;
+        font-size: 13px;
+        line-height: 1.45;
       }
 
-      .button-row.two,
+      .button-row.two {
+        grid-template-columns: 1fr 1fr;
+      }
+
       .button-row.one {
-        grid-template-columns: 1fr;
-        justify-content: stretch;
-      }
-
-      .button-row.one .win-btn {
-        justify-self: stretch;
+        grid-template-columns: minmax(150px, 210px);
       }
 
       .title-bar {
         cursor: default;
       }
-    }
 
-    @media (max-width: 430px) {
-      .hero-image,
-      .hero-image-placeholder {
-        width: 96px;
-        height: 96px;
-      }
-
-      .hero-title {
-        font-size: 30px;
-      }
-
-      .hero-subtitle {
-        font-size: 15px;
-      }
-
-      .window-body {
-        padding: 12px;
+      .taskbar-middle {
+        font-size: 11px;
+        padding: 0 8px;
       }
 
       .clock {
         min-width: 74px;
         font-size: 12px;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .hero-grid {
+        grid-template-columns: 84px 1fr;
+        gap: 10px 12px;
+      }
+
+      .hero-image,
+      .hero-image-placeholder {
+        width: 82px;
+        height: 82px;
+      }
+
+      .hero-title {
+        font-size: 24px;
+      }
+
+      .hero-subtitle {
+        font-size: 13px;
+      }
+
+      .hero-description {
+        font-size: 12px;
+      }
+
+      .button-row.two {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .win-btn {
+        min-height: 38px;
+        padding: 8px 10px;
+        font-size: 13px;
+      }
+
+      .window-body {
+        padding: 10px;
+      }
+
+      .taskbar-middle {
+        font-size: 10px;
       }
     }
 
@@ -598,7 +673,7 @@
       class="window main-window"
       id="window-main"
       data-window="main"
-      style="top: 48px; left: 48px;"
+      style="top: 46px; left: 46px;"
     >
       <div class="title-bar" data-drag-handle>
         <div class="title-bar-text">EVILLICA</div>
@@ -610,7 +685,7 @@
       </div>
 
       <div class="window-body">
-        <div class="hero-layout">
+        <div class="hero-grid">
           <div class="hero-image-wrap">
             <img
               src="image-one.png"
@@ -623,15 +698,20 @@
             </div>
           </div>
 
-          <div class="hero-copy">
+          <div class="hero-top">
             <h1 class="hero-title">EVILLICA</h1>
             <div class="hero-subtitle">Digital Horror Creator / Director / Visual Artist</div>
+          </div>
+
+          <div class="hero-description-wrap">
             <p class="hero-description">
               Digital horror creator working across short-form video, music collaborations,
               animated loops, and still visual works shaped by retro-digital aesthetics,
               liminal imagery, and nostalgic unease.
             </p>
+          </div>
 
+          <div class="hero-buttons-wrap">
             <div class="button-rows">
               <div class="button-row two">
                 <button class="win-btn" data-open="about">About</button>
@@ -649,8 +729,6 @@
             </div>
           </div>
         </div>
-
-        <div class="status-line">Ready.</div>
       </div>
     </section>
 
@@ -658,7 +736,7 @@
       class="window"
       id="window-about"
       data-window="about"
-      style="top: 72px; left: 90px; width: min(860px, calc(100vw - 16px));"
+      style="top: 62px; left: 86px; width: min(860px, calc(100vw - 16px));"
     >
       <div class="title-bar" data-drag-handle>
         <div class="title-bar-text">About</div>
@@ -670,6 +748,10 @@
       </div>
 
       <div class="window-body">
+        <div class="about-smiley-wrap">
+          <img src="smiley.png" alt="Pixel smiley" class="about-smiley" />
+        </div>
+
         <div class="about-layout">
           <div>
             <p class="section-text">EVILLICA is an independent digital horror creator and visual artist exploring modern internet aesthetics through short-form cinematic storytelling.
@@ -691,8 +773,6 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
             </div>
           </div>
         </div>
-
-        <div class="status-line">About information loaded.</div>
       </div>
     </section>
 
@@ -700,7 +780,7 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       class="window"
       id="window-works"
       data-window="works"
-      style="top: 86px; left: 118px; width: min(700px, calc(100vw - 16px));"
+      style="top: 84px; left: 114px; width: min(700px, calc(100vw - 16px));"
     >
       <div class="title-bar" data-drag-handle>
         <div class="title-bar-text">Works</div>
@@ -735,7 +815,7 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       class="window"
       id="window-press"
       data-window="press"
-      style="top: 100px; left: 146px; width: min(720px, calc(100vw - 16px));"
+      style="top: 110px; left: 150px; width: min(720px, calc(100vw - 16px));"
     >
       <div class="title-bar" data-drag-handle>
         <div class="title-bar-text">Press</div>
@@ -781,7 +861,7 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       class="window"
       id="window-social"
       data-window="social"
-      style="top: 114px; left: 174px; width: min(650px, calc(100vw - 16px));"
+      style="top: 138px; left: 178px; width: min(650px, calc(100vw - 16px));"
     >
       <div class="title-bar" data-drag-handle>
         <div class="title-bar-text">Social Media</div>
@@ -809,7 +889,7 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       class="window"
       id="window-contact"
       data-window="contact"
-      style="top: 128px; left: 202px; width: min(580px, calc(100vw - 16px));"
+      style="top: 166px; left: 206px; width: min(580px, calc(100vw - 16px));"
     >
       <div class="title-bar" data-drag-handle>
         <div class="title-bar-text">Contact</div>
@@ -827,8 +907,6 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
             <a class="window-link" href="mailto:your@email.com">Email</a>
           </div>
         </div>
-
-        <div class="status-line">Contact route available.</div>
       </div>
     </section>
   </div>
@@ -838,12 +916,13 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       <span class="start-logo" aria-hidden="true"></span>
       <span>Start</span>
     </button>
-    <div class="taskbar-spacer"></div>
+
+    <div class="taskbar-middle">EVILLICA 2026 All rights reserved.</div>
+
     <div class="clock" id="clock">12:00 AM</div>
   </div>
 
   <nav class="start-menu" id="startMenu">
-    <div class="start-menu-side"><span>Windows 95</span></div>
     <div class="start-menu-items">
       <button class="start-item" data-open="main">Open EVILLICA</button>
       <button class="start-item" data-open="about">About</button>
@@ -889,6 +968,11 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       if (!win) return;
       win.classList.add("active");
       bringToFront(win);
+
+      if (name === "press" || name === "social" || name === "contact") {
+        centerWindow(win);
+      }
+
       closeStartMenu();
     }
 
@@ -935,11 +1019,30 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       clock.textContent = `${hours}:${minutes} ${suffix}`;
     }
 
+    function centerWindow(win) {
+      const taskbarHeight = 44;
+      const margin = 6;
+      const width = win.offsetWidth;
+      const height = win.offsetHeight;
+
+      let left = Math.max(margin, (window.innerWidth - width) / 2);
+      let top = Math.max(margin, (window.innerHeight - taskbarHeight - height) / 2);
+
+      const maxLeft = window.innerWidth - width - margin;
+      const maxTop = window.innerHeight - taskbarHeight - height - margin;
+
+      left = Math.min(left, maxLeft);
+      top = Math.min(top, maxTop);
+
+      win.style.left = `${left}px`;
+      win.style.top = `${top}px`;
+    }
+
     function fitWindowsToViewport() {
       const taskbarHeight = 44;
       const margin = 6;
 
-      Object.values(windowsMap).forEach((win) => {
+      Object.entries(windowsMap).forEach(([name, win]) => {
         const maxWidth = window.innerWidth - margin * 2;
         if (win.offsetWidth > maxWidth) {
           win.style.width = `${maxWidth}px`;
@@ -947,20 +1050,24 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
 
         if (isMobileLike()) {
           win.style.left = `${margin}px`;
-          win.style.top = `${margin}px`;
+          win.style.top = `${10}px`;
         } else {
-          const rect = win.getBoundingClientRect();
-          let left = rect.left;
-          let top = rect.top;
+          if (name === "press" || name === "social" || name === "contact") {
+            centerWindow(win);
+          } else {
+            const rect = win.getBoundingClientRect();
+            let left = rect.left;
+            let top = rect.top;
 
-          const maxLeft = window.innerWidth - win.offsetWidth - margin;
-          const maxTop = window.innerHeight - taskbarHeight - win.offsetHeight - margin;
+            const maxLeft = window.innerWidth - win.offsetWidth - margin;
+            const maxTop = window.innerHeight - taskbarHeight - win.offsetHeight - margin;
 
-          left = Math.min(Math.max(left, margin), Math.max(margin, maxLeft));
-          top = Math.min(Math.max(top, margin), Math.max(margin, maxTop));
+            left = Math.min(Math.max(left, margin), Math.max(margin, maxLeft));
+            top = Math.min(Math.max(top, margin), Math.max(margin, maxTop));
 
-          win.style.left = `${left}px`;
-          win.style.top = `${top}px`;
+            win.style.left = `${left}px`;
+            win.style.top = `${top}px`;
+          }
         }
       });
     }
