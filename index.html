@@ -22,6 +22,8 @@
       --title-blue: #000080;
       --taskbar-h: 44px;
       --font-main: "MS Sans Serif", Tahoma, Geneva, Verdana, sans-serif;
+      --shadow-outer-1: rgba(0, 0, 0, 0.35);
+      --shadow-outer-2: rgba(0, 0, 0, 0.18);
     }
 
     * {
@@ -58,9 +60,47 @@
       opacity: 0.04;
       pointer-events: none;
       background-image:
-        linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px);
+        linear-gradient(rgba(255,255,255,0.45) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.45) 1px, transparent 1px);
       background-size: 6px 6px;
+    }
+
+    .desktop-icons {
+      position: absolute;
+      left: 14px;
+      top: 14px;
+      display: grid;
+      gap: 18px;
+      z-index: 2;
+    }
+
+    .desktop-icon {
+      width: 88px;
+      border: none;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 4px;
+      text-align: center;
+      font: inherit;
+      text-shadow: 1px 1px 0 rgba(0,0,0,0.45);
+    }
+
+    .desktop-icon img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      image-rendering: pixelated;
+      display: block;
+    }
+
+    .desktop-icon span {
+      font-size: 12px;
+      line-height: 1.15;
     }
 
     .window {
@@ -72,8 +112,8 @@
         inset 1px 1px 0 var(--win-light),
         inset -2px -2px 0 var(--win-dark),
         inset 2px 2px 0 #dfdfdf,
-        3px 3px 0 rgba(0,0,0,0.35),
-        6px 6px 0 rgba(0,0,0,0.18);
+        3px 3px 0 var(--shadow-outer-1),
+        6px 6px 0 var(--shadow-outer-2);
       min-width: 280px;
       max-width: calc(100vw - 16px);
       z-index: 10;
@@ -109,12 +149,14 @@
       overflow: hidden;
       text-overflow: ellipsis;
       font-size: 15px;
+      line-height: 1;
     }
 
     .title-bar-controls {
       display: flex;
       gap: 3px;
       flex-shrink: 0;
+      align-items: center;
     }
 
     .title-btn {
@@ -127,6 +169,10 @@
       font-weight: bold;
       line-height: 1;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
       box-shadow:
         inset -1px -1px 0 var(--win-darker),
         inset 1px 1px 0 var(--win-light),
@@ -167,25 +213,10 @@
       align-items: start;
     }
 
-    .hero-image-wrap {
-      grid-area: image;
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-start;
-    }
-
-    .hero-top {
-      grid-area: top;
-      min-width: 0;
-    }
-
-    .hero-description-wrap {
-      grid-area: desc;
-    }
-
-    .hero-buttons-wrap {
-      grid-area: buttons;
-    }
+    .hero-image-wrap { grid-area: image; }
+    .hero-top { grid-area: top; min-width: 0; }
+    .hero-description-wrap { grid-area: desc; }
+    .hero-buttons-wrap { grid-area: buttons; }
 
     .hero-image,
     .hero-image-placeholder {
@@ -196,11 +227,11 @@
       box-shadow:
         inset 1px 1px 0 #fff,
         inset -1px -1px 0 #808080;
+      display: block;
     }
 
     .hero-image {
       object-fit: cover;
-      display: block;
     }
 
     .hero-image-placeholder {
@@ -213,7 +244,15 @@
       padding: 8px;
     }
 
-    .hero-title {
+    .logo-main {
+      display: block;
+      width: min(320px, 100%);
+      height: auto;
+      object-fit: contain;
+    }
+
+    .logo-main-fallback {
+      display: none;
       margin: 0 0 8px;
       font-size: 42px;
       line-height: 0.95;
@@ -222,7 +261,7 @@
     }
 
     .hero-subtitle {
-      margin: 0;
+      margin: 8px 0 0;
       font-size: 18px;
       font-weight: bold;
       line-height: 1.2;
@@ -270,6 +309,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      gap: 8px;
       box-shadow:
         inset -1px -1px 0 var(--win-darker),
         inset 1px 1px 0 var(--win-light),
@@ -285,16 +325,6 @@
         inset -1px -1px 0 var(--win-light),
         inset 2px 2px 0 var(--win-dark),
         inset -2px -2px 0 #dfdfdf;
-    }
-
-    .status-line {
-      margin-top: 16px;
-      padding: 8px 10px;
-      font-size: 12px;
-      background: #d9d9d9;
-      box-shadow:
-        inset 1px 1px 0 #808080,
-        inset -1px -1px 0 #fff;
     }
 
     .section-text {
@@ -332,13 +362,12 @@
 
     .about-layout {
       display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
+      grid-template-columns: 1.05fr 0.95fr;
       gap: 18px;
       align-items: start;
     }
 
-    .media-panel {
-      min-height: 260px;
+    .showreel-card {
       background: #d0d0d0;
       padding: 10px;
       box-shadow:
@@ -347,34 +376,30 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-    }
-
-    .media-preview {
-      min-height: 190px;
-      background: #000;
-      color: #fff;
-      border: 1px solid #000;
-      display: flex;
       align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 12px;
-      overflow: hidden;
     }
 
-    .media-preview img,
-    .media-preview video,
-    .media-preview iframe {
+    .showreel-video-wrap {
+      width: min(100%, 280px);
+      aspect-ratio: 9 / 16;
+      border: 1px solid #000;
+      background: #000;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .showreel-video-wrap video {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border: 0;
       display: block;
     }
 
-    .media-caption {
+    .showreel-caption {
+      width: min(100%, 280px);
       font-size: 12px;
       line-height: 1.4;
+      text-align: center;
     }
 
     .simple-list {
@@ -402,8 +427,98 @@
       margin-top: 10px;
     }
 
+    .media-grid-vertical {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .media-grid-vertical.five {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .media-grid-square {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .media-grid-buff {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 16px;
+      margin-top: 16px;
+      align-items: start;
+    }
+
+    .media-card {
+      background: #d4d4d4;
+      padding: 10px;
+      box-shadow:
+        inset 1px 1px 0 #fff,
+        inset -1px -1px 0 #808080;
+    }
+
+    .media-frame-vertical {
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      border: 1px solid #000;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .media-frame-square {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border: 1px solid #000;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .media-frame-landscape {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border: 1px solid #000;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .media-frame-vertical video,
+    .media-frame-square img,
+    .media-frame-landscape video,
+    .media-frame-landscape img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .media-description {
+      margin-top: 8px;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
     .contact-box {
       max-width: 520px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .contact-email {
+      min-width: min(100%, 320px);
+      justify-self: center;
+      min-height: 46px;
+    }
+
+    .button-icon {
+      width: 16px;
+      height: 16px;
+      object-fit: contain;
+      image-rendering: pixelated;
+      flex-shrink: 0;
     }
 
     .taskbar {
@@ -452,11 +567,12 @@
     .start-logo {
       width: 16px;
       height: 16px;
-      object-fit: cover;
+      object-fit: contain;
       image-rendering: pixelated;
-      border: 1px solid #000;
-      background: #ffeb00;
+      display: block;
       flex-shrink: 0;
+      background: transparent;
+      border: none;
     }
 
     .taskbar-middle {
@@ -523,9 +639,63 @@
       text-align: left;
     }
 
-    .start-item:hover {
-      background: #d7d7d7;
-      color: #000;
+    .fullscreen-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.86);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 12000;
+      padding: 18px;
+    }
+
+    .fullscreen-overlay.open {
+      display: flex;
+    }
+
+    .fullscreen-content {
+      width: min(92vw, 480px);
+      aspect-ratio: 9 / 16;
+      background: #000;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 3px #000080;
+      overflow: hidden;
+    }
+
+    .fullscreen-content video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .fullscreen-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      min-width: 42px;
+      min-height: 42px;
+      border: none;
+      background: var(--win-gray);
+      box-shadow:
+        inset -1px -1px 0 var(--win-darker),
+        inset 1px 1px 0 var(--win-light),
+        inset -2px -2px 0 var(--win-dark),
+        inset 2px 2px 0 #dfdfdf;
+      font: inherit;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    @media (max-width: 980px) {
+      .media-grid-vertical.five {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .media-grid-square {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
     }
 
     @media (max-width: 860px) {
@@ -535,6 +705,10 @@
 
       .main-window {
         width: calc(100vw - 12px);
+      }
+
+      .media-grid-buff {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -556,10 +730,6 @@
 
       .hero-grid {
         grid-template-columns: 96px 1fr;
-        grid-template-areas:
-          "image top"
-          "desc desc"
-          "buttons buttons";
         gap: 12px 14px;
       }
 
@@ -569,9 +739,12 @@
         height: 92px;
       }
 
-      .hero-title {
+      .logo-main {
+        width: min(250px, 100%);
+      }
+
+      .logo-main-fallback {
         font-size: 28px;
-        margin: 0 0 6px;
       }
 
       .hero-subtitle {
@@ -604,6 +777,15 @@
         min-width: 74px;
         font-size: 12px;
       }
+
+      .media-grid-vertical,
+      .media-grid-vertical.five {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .media-grid-square {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
     @media (max-width: 430px) {
@@ -618,7 +800,11 @@
         height: 82px;
       }
 
-      .hero-title {
+      .logo-main {
+        width: min(190px, 100%);
+      }
+
+      .logo-main-fallback {
         font-size: 24px;
       }
 
@@ -628,10 +814,6 @@
 
       .hero-description {
         font-size: 12px;
-      }
-
-      .button-row.two {
-        grid-template-columns: 1fr 1fr;
       }
 
       .win-btn {
@@ -646,6 +828,12 @@
 
       .taskbar-middle {
         font-size: 10px;
+      }
+
+      .media-grid-vertical,
+      .media-grid-vertical.five,
+      .media-grid-square {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -664,6 +852,30 @@
 </head>
 <body>
   <div class="desktop">
+    <!-- DESKTOP ICONS -->
+    <div class="desktop-icons">
+      <button class="desktop-icon" data-open="commercials">
+        <img src="folder-commercials.png" alt="Commercials folder" />
+        <span>Commercials</span>
+      </button>
+
+      <button class="desktop-icon" data-open="artworks">
+        <img src="folder-artworks.png" alt="Artworks folder" />
+        <span>Artworks</span>
+      </button>
+
+      <button class="desktop-icon" data-open="collaborations">
+        <img src="folder-collaborations.png" alt="Collaborations folder" />
+        <span>Collaborations</span>
+      </button>
+
+      <button class="desktop-icon" data-open="trash">
+        <img src="trash-icon.png" alt="Trash" />
+        <span>Trash</span>
+      </button>
+    </div>
+
+    <!-- MAIN -->
     <section
       class="window main-window"
       id="window-main"
@@ -671,7 +883,7 @@
       style="width:min(760px, calc(100vw - 16px));"
     >
       <div class="title-bar" data-drag-handle>
-        <div class="title-bar-text">EVILLICA</div>
+        <div class="title-bar-text">EVILLICA.EXE</div>
         <div class="title-bar-controls">
           <button class="title-btn" data-minimize>_</button>
           <button class="title-btn" data-maximize>□</button>
@@ -694,7 +906,8 @@
           </div>
 
           <div class="hero-top">
-            <h1 class="hero-title">EVILLICA</h1>
+            <img src="logo-main.png" alt="EVILLICA logo" class="logo-main" id="logoMain" />
+            <div class="logo-main-fallback" id="logoFallback">EVILLICA</div>
             <div class="hero-subtitle">Digital Horror Creator / Director / Visual Artist</div>
           </div>
 
@@ -727,11 +940,12 @@
       </div>
     </section>
 
+    <!-- ABOUT -->
     <section
       class="window"
       id="window-about"
       data-window="about"
-      style="width:min(860px, calc(100vw - 16px));"
+      style="width:min(920px, calc(100vw - 16px));"
     >
       <div class="title-bar" data-drag-handle>
         <div class="title-bar-text">About</div>
@@ -760,24 +974,25 @@ Each project is developed as a complete personal production — from concept and
 Working across video, animated loops, and still digital imagery, EVILLICA builds compact fictional worlds that merge contemporary internet culture with the emotional textures of forgotten media.</p>
           </div>
 
-          <div class="media-panel">
-            <div class="media-preview">
-              Add your GIF, image, or video here later
+          <div class="showreel-card">
+            <div class="showreel-video-wrap" id="showreelTrigger">
+              <video id="aboutShowreel" src="about-showreel.mp4" autoplay muted loop playsinline></video>
             </div>
-            <div class="media-caption">
-              Media panel placeholder. You can later replace this with a GIF,
-              still image, short video, or embedded clip.
+            <div class="showreel-caption">
+              <strong>Showreel</strong><br />
+              Selected video works. Tap or click to expand.
             </div>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- WORKS HUB -->
     <section
       class="window"
       id="window-works"
       data-window="works"
-      style="width:min(700px, calc(100vw - 16px));"
+      style="width:min(720px, calc(100vw - 16px));"
     >
       <div class="title-bar" data-drag-handle>
         <div class="title-bar-text">Works</div>
@@ -792,22 +1007,211 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
         <div class="simple-list">
           <div class="list-item">
             <strong>Commercials</strong>
-            Selected commercial and branded visual work can be listed here.
+            Branded and commercial visual works.
+            <div class="link-row">
+              <button class="win-btn" data-open="commercials">Open</button>
+            </div>
           </div>
+
           <div class="list-item">
-            <strong>Art Projects</strong>
-            Personal short-form horror, digital art pieces, loops, and experimental concepts.
+            <strong>Artworks</strong>
+            Still images, collages, and visual compositions.
+            <div class="link-row">
+              <button class="win-btn" data-open="artworks">Open</button>
+            </div>
           </div>
+
           <div class="list-item">
             <strong>Collaborations</strong>
-            Music-driven and artist-led collaborative works can be placed here.
+            Music-driven and artist-led collaborative works.
+            <div class="link-row">
+              <button class="win-btn" data-open="collaborations">Open</button>
+            </div>
+          </div>
+
+          <div class="list-item">
+            <strong>Boston Underground Film Festival</strong>
+            Festival promo, edits, materials, and visuals.
+            <div class="link-row">
+              <button class="win-btn" data-open="buff">Open</button>
+            </div>
           </div>
         </div>
-
-        <div class="status-line">Work categories available.</div>
       </div>
     </section>
 
+    <!-- COMMERCIALS -->
+    <section
+      class="window"
+      id="window-commercials"
+      data-window="commercials"
+      style="width:min(1100px, calc(100vw - 16px));"
+    >
+      <div class="title-bar" data-drag-handle>
+        <div class="title-bar-text">Commercials</div>
+        <div class="title-bar-controls">
+          <button class="title-btn" data-minimize>_</button>
+          <button class="title-btn" data-maximize>□</button>
+          <button class="title-btn" data-close>×</button>
+        </div>
+      </div>
+
+      <div class="window-body">
+        <p class="section-text">Selected commercial work. Add 3 vertical videos with short descriptions below each piece.</p>
+
+        <div class="media-grid-vertical">
+          <div class="media-card">
+            <div class="media-frame-vertical">
+              <video src="commercial-1.mp4" autoplay muted loop playsinline></video>
+            </div>
+            <div class="media-description">Commercial 1 description.</div>
+          </div>
+
+          <div class="media-card">
+            <div class="media-frame-vertical">
+              <video src="commercial-2.mp4" autoplay muted loop playsinline></video>
+            </div>
+            <div class="media-description">Commercial 2 description.</div>
+          </div>
+
+          <div class="media-card">
+            <div class="media-frame-vertical">
+              <video src="commercial-3.mp4" autoplay muted loop playsinline></video>
+            </div>
+            <div class="media-description">Commercial 3 description.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ARTWORKS -->
+    <section
+      class="window"
+      id="window-artworks"
+      data-window="artworks"
+      style="width:min(1100px, calc(100vw - 16px));"
+    >
+      <div class="title-bar" data-drag-handle>
+        <div class="title-bar-text">Artworks</div>
+        <div class="title-bar-controls">
+          <button class="title-btn" data-minimize>_</button>
+          <button class="title-btn" data-maximize>□</button>
+          <button class="title-btn" data-close>×</button>
+        </div>
+      </div>
+
+      <div class="window-body">
+        <p class="section-text">A selection of still images, collages, and visual compositions.</p>
+
+        <div class="media-grid-square">
+          <div class="media-card"><div class="media-frame-square"><img src="art-1.jpg" alt="Artwork 1" /></div></div>
+          <div class="media-card"><div class="media-frame-square"><img src="art-2.jpg" alt="Artwork 2" /></div></div>
+          <div class="media-card"><div class="media-frame-square"><img src="art-3.jpg" alt="Artwork 3" /></div></div>
+          <div class="media-card"><div class="media-frame-square"><img src="art-4.jpg" alt="Artwork 4" /></div></div>
+          <div class="media-card"><div class="media-frame-square"><img src="art-5.jpg" alt="Artwork 5" /></div></div>
+          <div class="media-card"><div class="media-frame-square"><img src="art-6.jpg" alt="Artwork 6" /></div></div>
+          <div class="media-card"><div class="media-frame-square"><img src="art-7.jpg" alt="Artwork 7" /></div></div>
+          <div class="media-card"><div class="media-frame-square"><img src="art-8.jpg" alt="Artwork 8" /></div></div>
+          <div class="media-card"><div class="media-frame-square"><img src="art-9.jpg" alt="Artwork 9" /></div></div>
+          <div class="media-card"><div class="media-frame-square"><img src="art-10.jpg" alt="Artwork 10" /></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COLLABORATIONS -->
+    <section
+      class="window"
+      id="window-collaborations"
+      data-window="collaborations"
+      style="width:min(1200px, calc(100vw - 16px));"
+    >
+      <div class="title-bar" data-drag-handle>
+        <div class="title-bar-text">Collaborations</div>
+        <div class="title-bar-controls">
+          <button class="title-btn" data-minimize>_</button>
+          <button class="title-btn" data-maximize>□</button>
+          <button class="title-btn" data-close>×</button>
+        </div>
+      </div>
+
+      <div class="window-body">
+        <p class="section-text">Collaborative music and artist-led projects. Add 5 vertical videos and descriptions.</p>
+
+        <div class="media-grid-vertical five">
+          <div class="media-card">
+            <div class="media-frame-vertical"><video src="collab-1.mp4" autoplay muted loop playsinline></video></div>
+            <div class="media-description">Collaboration 1 description.</div>
+          </div>
+
+          <div class="media-card">
+            <div class="media-frame-vertical"><video src="collab-2.mp4" autoplay muted loop playsinline></video></div>
+            <div class="media-description">Collaboration 2 description.</div>
+          </div>
+
+          <div class="media-card">
+            <div class="media-frame-vertical"><video src="collab-3.mp4" autoplay muted loop playsinline></video></div>
+            <div class="media-description">Collaboration 3 description.</div>
+          </div>
+
+          <div class="media-card">
+            <div class="media-frame-vertical"><video src="collab-4.mp4" autoplay muted loop playsinline></video></div>
+            <div class="media-description">Collaboration 4 description.</div>
+          </div>
+
+          <div class="media-card">
+            <div class="media-frame-vertical"><video src="collab-5.mp4" autoplay muted loop playsinline></video></div>
+            <div class="media-description">Collaboration 5 description.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BUFF -->
+    <section
+      class="window"
+      id="window-buff"
+      data-window="buff"
+      style="width:min(1080px, calc(100vw - 16px));"
+    >
+      <div class="title-bar" data-drag-handle>
+        <div class="title-bar-text">Boston Underground Film Festival</div>
+        <div class="title-bar-controls">
+          <button class="title-btn" data-minimize>_</button>
+          <button class="title-btn" data-maximize>□</button>
+          <button class="title-btn" data-close>×</button>
+        </div>
+      </div>
+
+      <div class="window-body">
+        <p class="section-text">Promotional work, edits, and visuals created for the festival.</p>
+
+        <div class="media-grid-buff">
+          <div class="media-card">
+            <div class="media-frame-landscape">
+              <video src="buff-video.mp4" autoplay muted loop playsinline></video>
+            </div>
+            <div class="media-description">Main festival promo / edit.</div>
+          </div>
+
+          <div class="simple-list">
+            <div class="media-card">
+              <div class="media-frame-landscape"><img src="buff-1.jpg" alt="BUFF still 1" /></div>
+              <div class="media-description">Still / screenshot 1.</div>
+            </div>
+            <div class="media-card">
+              <div class="media-frame-landscape"><img src="buff-2.jpg" alt="BUFF still 2" /></div>
+              <div class="media-description">Still / screenshot 2.</div>
+            </div>
+            <div class="media-card">
+              <div class="media-frame-landscape"><img src="buff-3.jpg" alt="BUFF still 3" /></div>
+              <div class="media-description">Still / screenshot 3.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRESS -->
     <section
       class="window"
       id="window-press"
@@ -849,16 +1253,15 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
             </div>
           </div>
         </div>
-
-        <div class="status-line">Press materials indexed.</div>
       </div>
     </section>
 
+    <!-- SOCIAL -->
     <section
       class="window"
       id="window-social"
       data-window="social"
-      style="width:min(650px, calc(100vw - 16px));"
+      style="width:min(720px, calc(100vw - 16px));"
     >
       <div class="title-bar" data-drag-handle>
         <div class="title-bar-text">Social Media</div>
@@ -870,23 +1273,36 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       </div>
 
       <div class="window-body">
-        <p class="section-text">Explore EVILLICA across platforms.</p>
+        <div class="link-row">
+          <a class="window-link" href="https://instagram.com/" target="_blank" rel="noopener">
+            <img src="icon-instagram.png" alt="" class="button-icon" />
+            <span>Instagram</span>
+          </a>
 
-        <div class="link-row" style="margin-top: 16px;">
-          <a class="window-link" href="https://instagram.com/" target="_blank" rel="noopener">Instagram</a>
-          <a class="window-link" href="https://tiktok.com/" target="_blank" rel="noopener">TikTok</a>
-          <a class="window-link" href="https://youtube.com/" target="_blank" rel="noopener">YouTube</a>
+          <a class="window-link" href="https://tiktok.com/" target="_blank" rel="noopener">
+            <img src="icon-tiktok.png" alt="" class="button-icon" />
+            <span>TikTok</span>
+          </a>
+
+          <a class="window-link" href="https://youtube.com/" target="_blank" rel="noopener">
+            <img src="icon-youtube.png" alt="" class="button-icon" />
+            <span>YouTube</span>
+          </a>
+
+          <a class="window-link" href="https://facebook.com/" target="_blank" rel="noopener">
+            <img src="icon-facebook.png" alt="" class="button-icon" />
+            <span>Facebook</span>
+          </a>
         </div>
-
-        <div class="status-line">External links ready.</div>
       </div>
     </section>
 
+    <!-- CONTACT -->
     <section
       class="window"
       id="window-contact"
       data-window="contact"
-      style="width:min(580px, calc(100vw - 16px));"
+      style="width:min(560px, calc(100vw - 16px));"
     >
       <div class="title-bar" data-drag-handle>
         <div class="title-bar-text">Contact</div>
@@ -900,28 +1316,54 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       <div class="window-body">
         <div class="contact-box">
           <p class="section-text">For collaborations, press inquiries, and creative partnerships.</p>
-          <div class="link-row" style="margin-top: 16px;">
-            <a class="window-link" href="mailto:your@email.com">Email</a>
+          <div class="link-row" style="justify-content:center; margin-top:16px;">
+            <a class="window-link contact-email" href="mailto:your@email.com">
+              <img src="icon-email.png" alt="" class="button-icon" />
+              <span>Email</span>
+            </a>
           </div>
         </div>
       </div>
     </section>
+
+    <!-- TRASH -->
+    <section
+      class="window"
+      id="window-trash"
+      data-window="trash"
+      style="width:min(520px, calc(100vw - 16px));"
+    >
+      <div class="title-bar" data-drag-handle>
+        <div class="title-bar-text">Trash</div>
+        <div class="title-bar-controls">
+          <button class="title-btn" data-minimize>_</button>
+          <button class="title-btn" data-maximize>□</button>
+          <button class="title-btn" data-close>×</button>
+        </div>
+      </div>
+
+      <div class="window-body">
+        <p class="section-text">Trash folder placeholder. You can add an animated element here later.</p>
+      </div>
+    </section>
   </div>
 
+  <!-- TASKBAR -->
   <div class="taskbar">
     <button class="start-button" id="startButton" aria-expanded="false">
       <img src="smiley.png" alt="" class="start-logo" />
       <span>Start</span>
     </button>
 
-    <div class="taskbar-middle">© 2026 All rights reserved.</div>
+    <div class="taskbar-middle">Copyright © 2026 All rights reserved.</div>
 
     <div class="clock" id="clock">12:00 AM</div>
   </div>
 
+  <!-- START MENU -->
   <nav class="start-menu" id="startMenu">
     <div class="start-menu-items">
-      <button class="start-item" data-open="main">Open EVILLICA</button>
+      <button class="start-item" data-open="main">Main Menu</button>
       <button class="start-item" data-open="about">About</button>
       <button class="start-item" data-open="works">Works</button>
       <button class="start-item" data-open="press">Press</button>
@@ -929,6 +1371,14 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       <button class="start-item" data-open="contact">Contact</button>
     </div>
   </nav>
+
+  <!-- SHOWREEL FULLSCREEN -->
+  <div class="fullscreen-overlay" id="showreelOverlay">
+    <button class="fullscreen-close" id="showreelClose">×</button>
+    <div class="fullscreen-content">
+      <video id="showreelFullscreenVideo" src="about-showreel.mp4" controls autoplay muted loop playsinline></video>
+    </div>
+  </div>
 
   <audio id="popupSound" preload="auto">
     <source src="popup.wav" type="audio/wav" />
@@ -939,15 +1389,30 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       main: document.getElementById("window-main"),
       about: document.getElementById("window-about"),
       works: document.getElementById("window-works"),
+      commercials: document.getElementById("window-commercials"),
+      artworks: document.getElementById("window-artworks"),
+      collaborations: document.getElementById("window-collaborations"),
+      buff: document.getElementById("window-buff"),
       press: document.getElementById("window-press"),
       social: document.getElementById("window-social"),
       contact: document.getElementById("window-contact"),
+      trash: document.getElementById("window-trash"),
     };
 
     const startButton = document.getElementById("startButton");
     const startMenu = document.getElementById("startMenu");
     const popupSound = document.getElementById("popupSound");
     const clock = document.getElementById("clock");
+
+    const imageOne = document.getElementById("imageOne");
+    const imagePlaceholder = document.getElementById("imagePlaceholder");
+    const logoMain = document.getElementById("logoMain");
+    const logoFallback = document.getElementById("logoFallback");
+
+    const showreelTrigger = document.getElementById("showreelTrigger");
+    const showreelOverlay = document.getElementById("showreelOverlay");
+    const showreelClose = document.getElementById("showreelClose");
+    const showreelFullscreenVideo = document.getElementById("showreelFullscreenVideo");
 
     let zCounter = 20;
 
@@ -983,6 +1448,7 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
     function openWindow(name) {
       const win = windowsMap[name];
       if (!win) return;
+
       win.classList.add("active");
       bringToFront(win);
       centerWindow(win);
@@ -1001,6 +1467,7 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
     function toggleMaximize(win) {
       win.classList.toggle("maximized");
       bringToFront(win);
+
       if (!win.classList.contains("maximized")) {
         centerWindow(win);
       }
@@ -1043,11 +1510,20 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
         if (win.offsetWidth > maxWidth) {
           win.style.width = `${maxWidth}px`;
         }
-
         if (win.classList.contains("active") && !win.classList.contains("maximized")) {
           centerWindow(win);
         }
       });
+    }
+
+    function openShowreelOverlay() {
+      showreelOverlay.classList.add("open");
+      showreelFullscreenVideo.play().catch(() => {});
+    }
+
+    function closeShowreelOverlay() {
+      showreelOverlay.classList.remove("open");
+      showreelFullscreenVideo.pause();
     }
 
     startButton.addEventListener("click", (e) => {
@@ -1121,12 +1597,20 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       });
     });
 
-    const imageOne = document.getElementById("imageOne");
-    const imagePlaceholder = document.getElementById("imagePlaceholder");
-
     imageOne.addEventListener("error", () => {
       imageOne.style.display = "none";
       imagePlaceholder.style.display = "flex";
+    });
+
+    logoMain.addEventListener("error", () => {
+      logoMain.style.display = "none";
+      logoFallback.style.display = "block";
+    });
+
+    showreelTrigger.addEventListener("click", openShowreelOverlay);
+    showreelClose.addEventListener("click", closeShowreelOverlay);
+    showreelOverlay.addEventListener("click", (e) => {
+      if (e.target === showreelOverlay) closeShowreelOverlay();
     });
 
     updateClock();
@@ -1134,6 +1618,12 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
 
     window.addEventListener("resize", fitWindowsToViewport);
     window.addEventListener("orientationchange", fitWindowsToViewport);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeStartMenu();
+        closeShowreelOverlay();
+      }
+    });
 
     window.addEventListener("load", () => {
       setTimeout(() => {
