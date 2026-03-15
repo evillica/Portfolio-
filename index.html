@@ -21,7 +21,7 @@
       --win-darker: #404040;
       --title-blue: #000080;
       --taskbar-h: 44px;
-      --font-main: "MS Sans Serif", Tahoma, Geneva, Verdana, sans-serif;
+      --font-main: "MS Sans Serif", "Microsoft Sans Serif", "Chicago", "Tahoma", "Geneva", sans-serif;
       --shadow-outer-1: rgba(0, 0, 0, 0.35);
       --shadow-outer-2: rgba(0, 0, 0, 0.18);
     }
@@ -141,6 +141,8 @@
       padding: 4px 4px 4px 8px;
       font-weight: bold;
       cursor: move;
+      font-family: "MS Sans Serif", "Microsoft Sans Serif", "Chicago", "Tahoma", sans-serif;
+      letter-spacing: 0;
     }
 
     .title-bar-text {
@@ -251,13 +253,21 @@
       object-fit: contain;
     }
 
-    .logo-main-fallback {
+    .logo-main-placeholder {
       display: none;
-      margin: 0 0 8px;
-      font-size: 42px;
-      line-height: 0.95;
-      font-weight: bold;
-      word-break: break-word;
+      width: min(320px, 100%);
+      min-height: 54px;
+      padding: 10px 14px;
+      border: 1px solid #000;
+      background: #d7d7d7;
+      box-shadow:
+        inset 1px 1px 0 #fff,
+        inset -1px -1px 0 #808080;
+      font-size: 14px;
+      line-height: 1.2;
+      align-items: center;
+      justify-content: center;
+      color: #222;
     }
 
     .hero-subtitle {
@@ -292,6 +302,16 @@
     .button-row.one {
       grid-template-columns: minmax(170px, 220px);
       justify-content: center;
+    }
+
+    .win-btn,
+    .window-link,
+    .start-item,
+    .start-button,
+    .clock,
+    .taskbar-middle {
+      font-family: "MS Sans Serif", "Microsoft Sans Serif", "Chicago", "Tahoma", sans-serif;
+      letter-spacing: 0;
     }
 
     .win-btn,
@@ -461,14 +481,6 @@
         inset -1px -1px 0 #808080;
     }
 
-    .media-frame-vertical {
-      width: 100%;
-      aspect-ratio: 9 / 16;
-      border: 1px solid #000;
-      background: #000;
-      overflow: hidden;
-    }
-
     .media-frame-square {
       width: 100%;
       aspect-ratio: 1 / 1;
@@ -477,18 +489,7 @@
       overflow: hidden;
     }
 
-    .media-frame-landscape {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      border: 1px solid #000;
-      background: #000;
-      overflow: hidden;
-    }
-
-    .media-frame-vertical video,
-    .media-frame-square img,
-    .media-frame-landscape video,
-    .media-frame-landscape img {
+    .media-frame-square img {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -499,6 +500,52 @@
       margin-top: 8px;
       font-size: 12px;
       line-height: 1.35;
+    }
+
+    .video-cover-trigger {
+      width: 100%;
+      border: none;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      display: block;
+      text-align: left;
+    }
+
+    .video-cover {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      border: 1px solid #000;
+      background: #000;
+    }
+
+    .video-cover.vertical {
+      aspect-ratio: 9 / 16;
+    }
+
+    .video-cover.landscape {
+      aspect-ratio: 16 / 9;
+    }
+
+    .video-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .video-cover-label {
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      bottom: 8px;
+      background: rgba(0,0,0,0.72);
+      color: #fff;
+      font-size: 11px;
+      line-height: 1.2;
+      padding: 6px 8px;
+      text-align: center;
     }
 
     .contact-box {
@@ -565,10 +612,11 @@
     }
 
     .start-logo {
-      width: 16px;
-      height: 16px;
+      width: auto;
+      height: 18px;
+      max-width: 22px;
       object-fit: contain;
-      image-rendering: pixelated;
+      image-rendering: auto;
       display: block;
       flex-shrink: 0;
       background: transparent;
@@ -655,12 +703,16 @@
     }
 
     .fullscreen-content {
-      width: min(92vw, 480px);
+      width: min(92vw, 520px);
+      max-height: 88vh;
       aspect-ratio: 9 / 16;
       background: #000;
       border: 2px solid #fff;
       box-shadow: 0 0 0 3px #000080;
       overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .fullscreen-content video {
@@ -686,6 +738,9 @@
       font: inherit;
       font-weight: bold;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     @media (max-width: 980px) {
@@ -739,12 +794,9 @@
         height: 92px;
       }
 
-      .logo-main {
+      .logo-main,
+      .logo-main-placeholder {
         width: min(250px, 100%);
-      }
-
-      .logo-main-fallback {
-        font-size: 28px;
       }
 
       .hero-subtitle {
@@ -800,12 +852,9 @@
         height: 82px;
       }
 
-      .logo-main {
+      .logo-main,
+      .logo-main-placeholder {
         width: min(190px, 100%);
-      }
-
-      .logo-main-fallback {
-        font-size: 24px;
       }
 
       .hero-subtitle {
@@ -852,7 +901,6 @@
 </head>
 <body>
   <div class="desktop">
-    <!-- DESKTOP ICONS -->
     <div class="desktop-icons">
       <button class="desktop-icon" data-open="commercials">
         <img src="folder-commercials.png" alt="Commercials folder" />
@@ -875,7 +923,6 @@
       </button>
     </div>
 
-    <!-- MAIN -->
     <section
       class="window main-window"
       id="window-main"
@@ -907,7 +954,7 @@
 
           <div class="hero-top">
             <img src="logo-main.png" alt="EVILLICA logo" class="logo-main" id="logoMain" />
-            <div class="logo-main-fallback" id="logoFallback">EVILLICA</div>
+            <div class="logo-main-placeholder" id="logoPlaceholder">logo-main.png</div>
             <div class="hero-subtitle">Digital Horror Creator / Director / Visual Artist</div>
           </div>
 
@@ -940,7 +987,6 @@
       </div>
     </section>
 
-    <!-- ABOUT -->
     <section
       class="window"
       id="window-about"
@@ -987,7 +1033,6 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       </div>
     </section>
 
-    <!-- WORKS HUB -->
     <section
       class="window"
       id="window-works"
@@ -1040,7 +1085,6 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       </div>
     </section>
 
-    <!-- COMMERCIALS -->
     <section
       class="window"
       id="window-commercials"
@@ -1061,30 +1105,38 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
 
         <div class="media-grid-vertical">
           <div class="media-card">
-            <div class="media-frame-vertical">
-              <video src="commercial-1.mp4" autoplay muted loop playsinline></video>
-            </div>
+            <button class="video-cover-trigger" data-video="commercial-1.mp4">
+              <div class="video-cover vertical">
+                <img src="commercial-1-cover.jpg" alt="Commercial 1 preview" />
+                <div class="video-cover-label">Tap to play</div>
+              </div>
+            </button>
             <div class="media-description">Commercial 1 description.</div>
           </div>
 
           <div class="media-card">
-            <div class="media-frame-vertical">
-              <video src="commercial-2.mp4" autoplay muted loop playsinline></video>
-            </div>
+            <button class="video-cover-trigger" data-video="commercial-2.mp4">
+              <div class="video-cover vertical">
+                <img src="commercial-2-cover.jpg" alt="Commercial 2 preview" />
+                <div class="video-cover-label">Tap to play</div>
+              </div>
+            </button>
             <div class="media-description">Commercial 2 description.</div>
           </div>
 
           <div class="media-card">
-            <div class="media-frame-vertical">
-              <video src="commercial-3.mp4" autoplay muted loop playsinline></video>
-            </div>
+            <button class="video-cover-trigger" data-video="commercial-3.mp4">
+              <div class="video-cover vertical">
+                <img src="commercial-3-cover.jpg" alt="Commercial 3 preview" />
+                <div class="video-cover-label">Tap to play</div>
+              </div>
+            </button>
             <div class="media-description">Commercial 3 description.</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ARTWORKS -->
     <section
       class="window"
       id="window-artworks"
@@ -1118,7 +1170,6 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       </div>
     </section>
 
-    <!-- COLLABORATIONS -->
     <section
       class="window"
       id="window-collaborations"
@@ -1139,34 +1190,58 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
 
         <div class="media-grid-vertical five">
           <div class="media-card">
-            <div class="media-frame-vertical"><video src="collab-1.mp4" autoplay muted loop playsinline></video></div>
+            <button class="video-cover-trigger" data-video="collab-1.mp4">
+              <div class="video-cover vertical">
+                <img src="collab-1-cover.jpg" alt="Collaboration 1 preview" />
+                <div class="video-cover-label">Tap to play</div>
+              </div>
+            </button>
             <div class="media-description">Collaboration 1 description.</div>
           </div>
 
           <div class="media-card">
-            <div class="media-frame-vertical"><video src="collab-2.mp4" autoplay muted loop playsinline></video></div>
+            <button class="video-cover-trigger" data-video="collab-2.mp4">
+              <div class="video-cover vertical">
+                <img src="collab-2-cover.jpg" alt="Collaboration 2 preview" />
+                <div class="video-cover-label">Tap to play</div>
+              </div>
+            </button>
             <div class="media-description">Collaboration 2 description.</div>
           </div>
 
           <div class="media-card">
-            <div class="media-frame-vertical"><video src="collab-3.mp4" autoplay muted loop playsinline></video></div>
+            <button class="video-cover-trigger" data-video="collab-3.mp4">
+              <div class="video-cover vertical">
+                <img src="collab-3-cover.jpg" alt="Collaboration 3 preview" />
+                <div class="video-cover-label">Tap to play</div>
+              </div>
+            </button>
             <div class="media-description">Collaboration 3 description.</div>
           </div>
 
           <div class="media-card">
-            <div class="media-frame-vertical"><video src="collab-4.mp4" autoplay muted loop playsinline></video></div>
+            <button class="video-cover-trigger" data-video="collab-4.mp4">
+              <div class="video-cover vertical">
+                <img src="collab-4-cover.jpg" alt="Collaboration 4 preview" />
+                <div class="video-cover-label">Tap to play</div>
+              </div>
+            </button>
             <div class="media-description">Collaboration 4 description.</div>
           </div>
 
           <div class="media-card">
-            <div class="media-frame-vertical"><video src="collab-5.mp4" autoplay muted loop playsinline></video></div>
+            <button class="video-cover-trigger" data-video="collab-5.mp4">
+              <div class="video-cover vertical">
+                <img src="collab-5-cover.jpg" alt="Collaboration 5 preview" />
+                <div class="video-cover-label">Tap to play</div>
+              </div>
+            </button>
             <div class="media-description">Collaboration 5 description.</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- BUFF -->
     <section
       class="window"
       id="window-buff"
@@ -1187,23 +1262,26 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
 
         <div class="media-grid-buff">
           <div class="media-card">
-            <div class="media-frame-landscape">
-              <video src="buff-video.mp4" autoplay muted loop playsinline></video>
-            </div>
+            <button class="video-cover-trigger" data-video="buff-video.mp4">
+              <div class="video-cover landscape">
+                <img src="buff-video-cover.jpg" alt="BUFF video preview" />
+                <div class="video-cover-label">Tap to play</div>
+              </div>
+            </button>
             <div class="media-description">Main festival promo / edit.</div>
           </div>
 
           <div class="simple-list">
             <div class="media-card">
-              <div class="media-frame-landscape"><img src="buff-1.jpg" alt="BUFF still 1" /></div>
+              <div class="video-cover landscape"><img src="buff-1.jpg" alt="BUFF still 1" /></div>
               <div class="media-description">Still / screenshot 1.</div>
             </div>
             <div class="media-card">
-              <div class="media-frame-landscape"><img src="buff-2.jpg" alt="BUFF still 2" /></div>
+              <div class="video-cover landscape"><img src="buff-2.jpg" alt="BUFF still 2" /></div>
               <div class="media-description">Still / screenshot 2.</div>
             </div>
             <div class="media-card">
-              <div class="media-frame-landscape"><img src="buff-3.jpg" alt="BUFF still 3" /></div>
+              <div class="video-cover landscape"><img src="buff-3.jpg" alt="BUFF still 3" /></div>
               <div class="media-description">Still / screenshot 3.</div>
             </div>
           </div>
@@ -1211,7 +1289,6 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       </div>
     </section>
 
-    <!-- PRESS -->
     <section
       class="window"
       id="window-press"
@@ -1256,7 +1333,6 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       </div>
     </section>
 
-    <!-- SOCIAL -->
     <section
       class="window"
       id="window-social"
@@ -1297,7 +1373,6 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       </div>
     </section>
 
-    <!-- CONTACT -->
     <section
       class="window"
       id="window-contact"
@@ -1326,7 +1401,6 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       </div>
     </section>
 
-    <!-- TRASH -->
     <section
       class="window"
       id="window-trash"
@@ -1348,7 +1422,6 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
     </section>
   </div>
 
-  <!-- TASKBAR -->
   <div class="taskbar">
     <button class="start-button" id="startButton" aria-expanded="false">
       <img src="smiley.png" alt="" class="start-logo" />
@@ -1360,7 +1433,6 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
     <div class="clock" id="clock">12:00 AM</div>
   </div>
 
-  <!-- START MENU -->
   <nav class="start-menu" id="startMenu">
     <div class="start-menu-items">
       <button class="start-item" data-open="main">Main Menu</button>
@@ -1372,11 +1444,10 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
     </div>
   </nav>
 
-  <!-- SHOWREEL FULLSCREEN -->
-  <div class="fullscreen-overlay" id="showreelOverlay">
-    <button class="fullscreen-close" id="showreelClose">×</button>
-    <div class="fullscreen-content">
-      <video id="showreelFullscreenVideo" src="about-showreel.mp4" controls autoplay muted loop playsinline></video>
+  <div class="fullscreen-overlay" id="videoOverlay">
+    <button class="fullscreen-close" id="videoOverlayClose">×</button>
+    <div class="fullscreen-content" id="videoOverlayContent">
+      <video id="videoOverlayPlayer" controls playsinline></video>
     </div>
   </div>
 
@@ -1407,12 +1478,12 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
     const imageOne = document.getElementById("imageOne");
     const imagePlaceholder = document.getElementById("imagePlaceholder");
     const logoMain = document.getElementById("logoMain");
-    const logoFallback = document.getElementById("logoFallback");
+    const logoPlaceholder = document.getElementById("logoPlaceholder");
 
     const showreelTrigger = document.getElementById("showreelTrigger");
-    const showreelOverlay = document.getElementById("showreelOverlay");
-    const showreelClose = document.getElementById("showreelClose");
-    const showreelFullscreenVideo = document.getElementById("showreelFullscreenVideo");
+    const videoOverlay = document.getElementById("videoOverlay");
+    const videoOverlayClose = document.getElementById("videoOverlayClose");
+    const videoOverlayPlayer = document.getElementById("videoOverlayPlayer");
 
     let zCounter = 20;
 
@@ -1516,14 +1587,17 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       });
     }
 
-    function openShowreelOverlay() {
-      showreelOverlay.classList.add("open");
-      showreelFullscreenVideo.play().catch(() => {});
+    function openVideoOverlay(src) {
+      videoOverlayPlayer.src = src;
+      videoOverlay.classList.add("open");
+      videoOverlayPlayer.play().catch(() => {});
     }
 
-    function closeShowreelOverlay() {
-      showreelOverlay.classList.remove("open");
-      showreelFullscreenVideo.pause();
+    function closeVideoOverlay() {
+      videoOverlay.classList.remove("open");
+      videoOverlayPlayer.pause();
+      videoOverlayPlayer.removeAttribute("src");
+      videoOverlayPlayer.load();
     }
 
     startButton.addEventListener("click", (e) => {
@@ -1604,13 +1678,20 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
 
     logoMain.addEventListener("error", () => {
       logoMain.style.display = "none";
-      logoFallback.style.display = "block";
+      logoPlaceholder.style.display = "flex";
     });
 
-    showreelTrigger.addEventListener("click", openShowreelOverlay);
-    showreelClose.addEventListener("click", closeShowreelOverlay);
-    showreelOverlay.addEventListener("click", (e) => {
-      if (e.target === showreelOverlay) closeShowreelOverlay();
+    showreelTrigger.addEventListener("click", () => openVideoOverlay("about-showreel.mp4"));
+
+    videoOverlayClose.addEventListener("click", closeVideoOverlay);
+    videoOverlay.addEventListener("click", (e) => {
+      if (e.target === videoOverlay) closeVideoOverlay();
+    });
+
+    document.querySelectorAll(".video-cover-trigger").forEach((button) => {
+      button.addEventListener("click", () => {
+        openVideoOverlay(button.dataset.video);
+      });
     });
 
     updateClock();
@@ -1618,10 +1699,11 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
 
     window.addEventListener("resize", fitWindowsToViewport);
     window.addEventListener("orientationchange", fitWindowsToViewport);
+
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         closeStartMenu();
-        closeShowreelOverlay();
+        closeVideoOverlay();
       }
     });
 
