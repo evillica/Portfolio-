@@ -1,6 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <style>
+.trash-scene {
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #d8d8d8 0%, #cfcfcf 100%);
+  box-shadow:
+    inset 1px 1px 0 #fff,
+    inset -1px -1px 0 #808080;
+}
+
+.paper-ball {
+  position: absolute;
+  width: 54px;
+  height: 54px;
+  background: #f7f7f7;
+  border: 1px solid #000;
+  border-radius: 42% 58% 47% 53% / 46% 39% 61% 54%;
+  box-shadow:
+    inset 6px 5px 0 rgba(0,0,0,0.08),
+    inset -5px -4px 0 rgba(255,255,255,0.75),
+    2px 2px 0 rgba(0,0,0,0.25);
+  transform: translateY(40px) scale(0.6) rotate(-18deg);
+  opacity: 0;
+}
+
+.paper-ball.animate {
+  animation: crumpleOpen 1.4s ease forwards;
+}
+
+.paper-note {
+  width: min(100%, 340px);
+  min-height: 220px;
+  background: #fffef8;
+  border: 1px solid #000;
+  box-shadow:
+    inset 1px 1px 0 #fff,
+    inset -1px -1px 0 #bcbcbc,
+    3px 3px 0 rgba(0,0,0,0.18);
+  padding: 22px 18px;
+  opacity: 0;
+  transform: scale(0.25) rotate(12deg);
+}
+
+.paper-note.show {
+  animation: paperReveal 0.9s ease forwards;
+}
+
+@keyframes crumpleOpen {
+  0% { transform: translateY(40px) scale(0.6) rotate(-18deg); opacity: 0; }
+  20% { transform: translateY(-12px) scale(1.1) rotate(12deg); opacity: 1; }
+  40% { transform: translateY(6px) scale(0.95) rotate(-8deg); }
+  60% { transform: translateY(0px) scale(1.2) rotate(6deg); }
+  80% { transform: scale(1.6) rotate(-3deg); opacity: 0.9; }
+  100% { transform: scale(2.4) rotate(0deg); opacity: 0; }
+}
+
+@keyframes paperReveal {
+  0% { opacity: 0; transform: scale(0.25) rotate(12deg); }
+  60% { opacity: 1; transform: scale(1.05) rotate(-3deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+</style>
   <meta charset="UTF-8" />
   <meta
     name="viewport"
@@ -1402,19 +1468,36 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
     </section>
 
     <section
-      class="window"
-      id="window-trash"
-      data-window="trash"
-      style="width:min(520px, calc(100vw - 16px));"
-    >
-      <div class="title-bar" data-drag-handle>
-        <div class="title-bar-text">Trash</div>
-        <div class="title-bar-controls">
-          <button class="title-btn" data-minimize>_</button>
-          <button class="title-btn" data-maximize>□</button>
-          <button class="title-btn" data-close>×</button>
+  class="window"
+  id="window-trash"
+  data-window="trash"
+  style="width:min(560px, calc(100vw - 16px));"
+>
+  <div class="title-bar" data-drag-handle>
+    <div class="title-bar-text">Trash</div>
+    <div class="title-bar-controls">
+      <button class="title-btn" data-minimize>_</button>
+      <button class="title-btn" data-maximize>□</button>
+      <button class="title-btn" data-close>×</button>
+    </div>
+  </div>
+
+  <div class="window-body">
+    <div class="trash-scene">
+      <div class="paper-ball" id="paperBall"></div>
+
+      <div class="paper-note" id="paperNote">
+        <div class="paper-note-inner">
+          <p>Nothing has been discarded here yet.</p>
+          <p>
+            For additional materials, visit Social Media
+            or continue exploring the folders.
+          </p>
         </div>
       </div>
+    </div>
+  </div>
+</section>
 
       <div class="window-body">
         <p class="section-text">Trash folder placeholder. You can add an animated element here later.</p>
@@ -1524,6 +1607,9 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       bringToFront(win);
       centerWindow(win);
       closeStartMenu();
+      if (name === "trash") {
+  runTrashAnimation();
+}
     }
 
     function closeWindow(win) {
@@ -1715,5 +1801,26 @@ Working across video, animated loops, and still digital imagery, EVILLICA builds
       }, 400);
     });
   </script>
+  <script>
+function runTrashAnimation() {
+  const paperBall = document.getElementById("paperBall");
+  const paperNote = document.getElementById("paperNote");
+
+  if (!paperBall || !paperNote) return;
+
+  paperBall.classList.remove("animate");
+  paperNote.classList.remove("show");
+
+  void paperBall.offsetWidth;
+
+  setTimeout(() => {
+    paperBall.classList.add("animate");
+  }, 120);
+
+  setTimeout(() => {
+    paperNote.classList.add("show");
+  }, 600);
+}
+</script>
 </body>
 </html>
